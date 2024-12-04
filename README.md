@@ -2,6 +2,8 @@
 
 This project demonstrates how to send and receive _cross-chain messages_ using the **Wormhole** protocol, specifically between Avalanche Fuji and Celo Alfajores TestNets. The repository includes automated scripts for deploying contracts and sending messages across these chains.
 
+For a complete tutorial on performing cross-chain messaging using Wormhole's Typescript SDK from scratch, please take a look at the [Wormhole Cross-Chain Contracts Tutorial](https://wormhole.com/docs/tutorials/messaging/cross-chain-contracts/).
+
 ### Features
 
  - Deploy smart contracts on Avalanche Fuji and Celo Alfajores TestNets
