@@ -12,14 +12,14 @@ async function main(): Promise<void> {
 		fs.readFileSync(path.resolve(__dirname, '../deploy-config/chains.json'), 'utf8')
 	);
 
-	// Get the Celo Testnet configuration
-	const celoChain = chains.chains.find((chain) => chain.description.includes('Celo Testnet'));
-	if (!celoChain) {
-		throw new Error('Celo Testnet configuration not found.');
+	// Get the Base Sepolia Testnet configuration
+	const baseSepoliaChain = chains.chains.find((chain) => chain.description.includes('Base Sepolia TestNet'));
+	if (!baseSepoliaChain) {
+		throw new Error('Base Sepolia TestNet configuration not found.');
 	}
 
 	// Set up the provider and wallet
-	const provider = new ethers.JsonRpcProvider(celoChain.rpc);
+	const provider = new ethers.JsonRpcProvider(baseSepoliaChain.rpc);
 	const wallet = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
 
 	// Load the ABI and bytecode of the MessageReceiver contract
@@ -35,8 +35,8 @@ async function main(): Promise<void> {
 	// Create a ContractFactory for MessageReceiver
 	const MessageReceiver = new ethers.ContractFactory(abi, bytecode, wallet);
 
-	// Deploy the contract using the Wormhole Relayer address for Celo Testnet
-	const receiverContract = await MessageReceiver.deploy(celoChain.wormholeRelayer);
+	// Deploy the contract using the Wormhole Relayer address for Base Sepolia Testnet
+	const receiverContract = await MessageReceiver.deploy(baseSepoliaChain.wormholeRelayer);
 	await receiverContract.waitForDeployment();
 
 	console.log('MessageReceiver deployed to:', receiverContract.target); // `target` is the contract address in ethers.js v6
@@ -48,26 +48,26 @@ async function main(): Promise<void> {
 	);
 
 	// Retrieve the address of the MessageSender from the deployedContracts.json file
-	const avalancheSenderAddress = deployedContracts.avalanche?.MessageSender;
-	if (!avalancheSenderAddress) {
-		throw new Error('Avalanche MessageSender address not found.');
+	const ethSepoliaSenderAddress = deployedContracts.ethSepolia?.MessageSender;
+	if (!ethSepoliaSenderAddress) {
+		throw new Error('ETH Sepolia MessageSender address not found.');
 	}
 
-	// Define the source chain ID for Avalanche Fuji
-	const sourceChainId = 6;
+	// Define the source chain ID for ETH Sepolia
+	const sourceChainId = 10002;
 
 	// Call setRegisteredSender on the MessageReceiver contract
 	const tx = await (receiverContract as any).setRegisteredSender(
 		sourceChainId,
-		ethers.zeroPadValue(avalancheSenderAddress, 32)
+		ethers.zeroPadValue(ethSepoliaSenderAddress, 32)
 	);
 	await tx.wait(); // Wait for the transaction to be confirmed
 
 	console.log(
-		`Registered MessageSender (${avalancheSenderAddress}) for Avalanche chain (${sourceChainId})`
+		`Registered MessageSender (${ethSepoliaSenderAddress}) for ETH Sepolia chain (${sourceChainId})`
 	);
 
-	deployedContracts.celo = {
+	deployedContracts.baseSepolia = {
 		MessageReceiver: receiverContract.target as any,
 		deployedAt: new Date().toISOString(),
 	};

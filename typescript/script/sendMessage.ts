@@ -16,21 +16,21 @@ async function main(): Promise<void> {
 		fs.readFileSync(path.resolve(__dirname, '../deploy-config/deployedContracts.json'), 'utf8')
 	);
 
-	console.log('Sender Contract Address: ', deployedContracts.avalanche.MessageSender);
-	console.log('Receiver Contract Address: ', deployedContracts.celo.MessageReceiver);
+	console.log('Sender Contract Address: ', deployedContracts.ethSepolia.MessageSender);
+	console.log('Receiver Contract Address: ', deployedContracts.baseSepolia.MessageReceiver);
 	console.log('...');
 
-	// Get the Avalanche Fuji configuration
-	const avalancheChain = chains.chains.find((chain) =>
-		chain.description.includes('Avalanche testnet')
+	// Get the Eth Sepolia configuration
+	const ethSepoliaChain = chains.chains.find((chain) =>
+		chain.description.includes('Ethereuem Sepolia TestNet')
 	);
 
-	if (!avalancheChain) {
-		throw new Error('Avalanche testnet configuration not found in chains.json.');
+	if (!ethSepoliaChain) {
+		throw new Error('ETH Sepolia TestNet configuration not found in chains.json.');
 	}
 
 	// Set up the provider and wallet
-	const provider = new ethers.JsonRpcProvider(avalancheChain.rpc);
+	const provider = new ethers.JsonRpcProvider(ethSepoliaChain.rpc);
 	const wallet = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
 
 	// Load the ABI of the MessageSender contract
@@ -42,17 +42,17 @@ async function main(): Promise<void> {
 
 	// Create a contract instance for MessageSender
 	const MessageSender = new ethers.Contract(
-		deployedContracts.avalanche.MessageSender, // Automatically use the deployed address
+		deployedContracts.ethSepolia.MessageSender, // Automatically use the deployed address
 		abi,
 		wallet
 	);
 
-	// Define the target chain and target address (the Celo receiver contract)
-	const targetChain = 14; // Wormhole chain ID for Celo Alfajores
-	const targetAddress = deployedContracts.celo.MessageReceiver; // Automatically use the deployed address
+	// Define the target chain and target address (the Base Sepollia receiver contract)
+	const targetChain = 10004; // Wormhole chain ID for Base Sepolia
+	const targetAddress = deployedContracts.baseSepolia.MessageReceiver; // Automatically use the deployed address
 
 	// The message you want to send
-	const message = 'Hello from Avalanche to Celo!';
+	const message = 'Hello from Eth Sepolia to Base Sepolia!';
 
 	// Dynamically quote the cross-chain cost
 	const txCost = await MessageSender.quoteCrossChainCost(targetChain);

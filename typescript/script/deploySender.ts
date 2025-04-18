@@ -12,16 +12,16 @@ async function main(): Promise<void> {
 		fs.readFileSync(path.resolve(__dirname, '../deploy-config/chains.json'), 'utf8')
 	);
 
-	// Get the Avalanche Fuji configuration
-	const avalancheChain = chains.chains.find((chain) =>
-		chain.description.includes('Avalanche testnet')
+	// Get the ETH Sepolia configuration
+	const ethSepoliaChain = chains.chains.find((chain) =>
+		chain.description.includes('Ethereuem Sepolia TestNet')
 	);
-	if (!avalancheChain) {
-		throw new Error('Avalanche testnet configuration not found in chains.json.');
+	if (!ethSepoliaChain) {
+		throw new Error('Ethereum Sepolia TestNet configuration not found in chains.json.');
 	}
 
 	// Set up the provider and wallet
-	const provider = new ethers.JsonRpcProvider(avalancheChain.rpc);
+	const provider = new ethers.JsonRpcProvider(ethSepoliaChain.rpc);
 	const wallet = new ethers.Wallet(process.env.PRIVATE_KEY || '', provider);
 
 	// Load the ABI and bytecode of the MessageSender contract
@@ -34,8 +34,8 @@ async function main(): Promise<void> {
 	// Create a ContractFactory for MessageSender
 	const MessageSender = new ethers.ContractFactory(abi, bytecode, wallet);
 
-	// Deploy the contract using the Wormhole Relayer address for Avalanche Fuji
-	const senderContract = await MessageSender.deploy(avalancheChain.wormholeRelayer);
+	// Deploy the contract using the Wormhole Relayer address for Eth Sepolia
+	const senderContract = await MessageSender.deploy(ethSepoliaChain.wormholeRelayer);
 	await senderContract.waitForDeployment();
 
 	console.log('MessageSender deployed to:', senderContract.target); // `target` is the address in ethers.js v6
@@ -46,7 +46,7 @@ async function main(): Promise<void> {
 		fs.readFileSync(deployedContractsPath, 'utf8')
 	);
 
-	deployedContracts.avalanche = {
+	deployedContracts.ethSepolia = {
 		MessageSender: senderContract.target as any,
 		deployedAt: new Date().toISOString(),
 	};
