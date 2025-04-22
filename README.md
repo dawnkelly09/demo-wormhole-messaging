@@ -48,20 +48,27 @@ cd javascript
 cd typescript
 ```
 
-**3. Install dependencies:**
+**3. Install Foundry dependencies:**
+
+```bash
+forge install wormhole-foundation/wormhole-solidity-sdk
+forge install foundry-rs/forge-std
+```
+
+
+**4. Install dependencies:**
 
 ```bash
 npm install
-forge install
 ```
 
-**4. Compile contracts:**
+**5. Compile contracts:**
 
 ```bash
 forge build
 ```
 
-**5. Run Tests:**
+**6. Run Tests:**
 
 Before deploying contracts, it's recommended to run the tests to ensure everything is functioning correctly. Run:
 
@@ -81,7 +88,7 @@ Suite result: ok. 3 passed; 0 failed; 0 skipped; finished in 7.53ms (3.55ms CPU 
 Ran 1 test suite in 112.75ms (7.53ms CPU time): 3 tests passed, 0 failed, 0 skipped (3 total tests)
 ```
 
-**6. Deploy contracts:**
+**7. Deploy contracts:**
 
 **Deploy the sender contract on Avalanche Fuji:**
 
@@ -97,7 +104,7 @@ npm run deploy:receiver
 ```
 - You may see the respective contract deployed on the [Alfajores Explorer](https://explorer.celo.org/alfajores/)
 
-**7. Send Cross-Chain Message:**
+**8. Send Cross-Chain Message:**
 
 Send a message from Avalanche Fuji to Celo Alfajores:
 
