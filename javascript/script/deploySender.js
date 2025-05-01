@@ -1,7 +1,9 @@
 const { ethers } = require("ethers");
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
-require("dotenv").config();
+const readline = require("readline/promises");
+const { stdin: input, stdout: output } = require("process");
 
 async function main() {
   // Load the chain configuration from JSON
@@ -13,10 +15,29 @@ async function main() {
   const avalancheChain = chains.chains.find((chain) =>
     chain.description.includes("Avalanche testnet")
   );
+  if (!avalancheChain) {
+    throw new Error("Avalanche testnet configuration not found.");
+  }
 
-  // Set up the provider and wallet
+  // Set up the provider
   const provider = new ethers.JsonRpcProvider(avalancheChain.rpc);
-  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+
+  // Load the encrypted keystore
+  const keystorePath = path.join(os.homedir(), ".foundry", "keystores", "CELO_AVAX");
+  const keystore = fs.readFileSync(keystorePath, "utf8");
+
+  // Prompt the user for password
+  const rl = readline.createInterface({ input, output });
+  const password = await rl.question("Enter password: ");
+  rl.close();
+
+  if (!password) {
+    throw new Error("No password provided.");
+  }
+
+  // Decrypt and connect the wallet
+  const wallet = await ethers.Wallet.fromEncryptedJson(keystore, password);
+  const connectedWallet = wallet.connect(provider);
 
   // Load the ABI and bytecode of the MessageSender contract
   const messageSenderJson = JSON.parse(
@@ -27,7 +48,7 @@ async function main() {
   const bytecode = messageSenderJson.bytecode;
 
   // Create a ContractFactory for MessageSender
-  const MessageSender = new ethers.ContractFactory(abi, bytecode, wallet);
+  const MessageSender = new ethers.ContractFactory(abi, bytecode, connectedWallet);
 
   // Deploy the contract using the Wormhole Relayer address for Avalanche Fuji
   const senderContract = await MessageSender.deploy(avalancheChain.wormholeRelayer);

@@ -15,11 +15,9 @@ For a complete tutorial on performing cross-chain messaging using Wormhole's Typ
 - [Foundry installed](https://book.getfoundry.sh/getting-started/installation)
 - [Node.js and npm installed](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm)
 - You will need TestNet tokens in both chains ([Fuji](https://faucets.chain.link/fuji) / [Alfajores](https://faucets.chain.link/celo-alfajores-testnet)) to complete transactions
-- An `.env` file with your private key:
+- A [Foundry keystore](https://book.getfoundry.sh/reference/cast/cast-wallet-import) with decryption password for your wallet private key
 
-```bash
-PRIVATE_KEY=0x...
-```
+<!--TODO: link to instructions for setting keystore in Get Started with Messaging once published-->
 
 > The `chains.json` file requires the details of the source and target chains. For a complete list of contract addresses needed to populate this file, visit the [contract addresses page](https://wormhole.com/docs/build/reference/) from the Wormhole Documentation. In this project, we are using Avalanche and Celo as default.
 
@@ -95,6 +93,8 @@ Ran 1 test suite in 112.75ms (7.53ms CPU time): 3 tests passed, 0 failed, 0 skip
 ```bash
 npm run deploy:sender
 ```
+
+- Provide your keystore decryption password when prompted
 - You may see the respective contract deployed on the [Fuji Explorer](https://testnet.snowtrace.io/)
 
 **Deploy the receiver contract on Celo Alfajores:**
@@ -102,6 +102,8 @@ npm run deploy:sender
 ```bash
 npm run deploy:receiver
 ```
+
+- Provide your keystore decryption password when prompted
 - You may see the respective contract deployed on the [Alfajores Explorer](https://explorer.celo.org/alfajores/)
 
 **8. Send Cross-Chain Message:**
@@ -111,6 +113,8 @@ Send a message from Avalanche Fuji to Celo Alfajores:
 ```bash
 npm run send:message
 ```
+
+- Provide your keystore decryption password when prompted
 - You may check the transaction status on the [Wormhole Explorer](https://wormholescan.io/#/?network=TESTNET)
 
 ### How It Works
@@ -133,4 +137,5 @@ The deployment scripts automatically store the contract addresses in `deployedCo
 - **test/** - unit tests for smart contracts
 
 ### Resources
+<!--TODO: add link for Get Started with Messaging guide and update this tutorial link when updated docs ship-->
 The [Wormhole documentation tutorial](https://wormhole.com/docs/tutorials/by-product/contract-integrations/cross-chain-contracts/) provides a detailed, step-by-step guide for setting up and running this repository.
