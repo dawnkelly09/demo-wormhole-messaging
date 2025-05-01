@@ -1,3 +1,0 @@
-[submodule "typescript/lib/wormhole-solidity-sdk"]
-	path = typescript/lib/wormhole-solidity-sdk
-	url = https://github.com/wormhole-foundation/wormhole-solidity-sdk
